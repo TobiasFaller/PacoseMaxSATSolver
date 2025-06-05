@@ -2457,4 +2457,11 @@ void Pacose::SetSumOfSoftWeights(uint64_t softWeights) {
   _sumOfSoftWeights = softWeights;
 }
 
+uint32_t Pacose::GetModel(int var) {
+  if (var >= _bestModel.size()) {
+    return 0;
+  }
+  return _bestModel[var];
+}
+
 } // Namespace Pacose
