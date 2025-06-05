@@ -89,8 +89,8 @@ GreedyPrepro::~GreedyPrepro() {
   // Pacose will be destroyed by application or main
   // Settings will be destroyed by Pacose
   // _softClauses will be destroyed by Pacose
-  //  delete _timeVariables;
-  //  delete _timeSolvedFirst;
+  delete _timeVariables;
+  delete _timeSolvedFirst;
 }
 
 uint32_t GreedyPrepro::NewVariable(void) {

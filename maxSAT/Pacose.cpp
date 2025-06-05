@@ -1120,23 +1120,23 @@ bool Pacose::ExternalPreprocessing(ClauseDB &clauseDB) {
         return false;
       }
       _hasHardClauses = true;
-      std::vector<uint32_t> *clause = new std::vector<uint32_t>;
+      std::vector<uint32_t> clause;
       for (auto lit : clauseDB.clauses[i]) {
-        clause->push_back(clauseDB.SignedTouint32_tLit(lit));
+        clause.push_back(clauseDB.SignedTouint32_tLit(lit));
       }
       // _satSolver->AddClause(clauseDB.clauses[i]);
-      AddClause(*clause);
+      AddClause(clause);
     } else {
       // soft clause
       if ((clauseDB.clauses[i].empty())) {
         emptyWeight += clauseDB.weights[i];
         continue;
       }
-      std::vector<uint32_t> *sclause = new std::vector<uint32_t>;
+      std::vector<uint32_t> sclause;
       for (auto lit : clauseDB.clauses[i]) {
-        sclause->push_back(clauseDB.SignedTouint32_tLit(lit));
+        sclause.push_back(clauseDB.SignedTouint32_tLit(lit));
       }
-      AddSoftClause(*sclause, clauseDB.weights[i]);
+      AddSoftClause(sclause, clauseDB.weights[i]);
     }
     _nbOfOrigPlusSCRelaxVars = _satSolver->GetNumberOfVariables();
   }
