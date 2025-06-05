@@ -1056,7 +1056,7 @@ void Pacose::ChooseEncoding() {
 //   // }
 // }
 
-bool Pacose::ExternalPreprocessing(ClauseDB &clauseDB) {
+uint32_t Pacose::ExternalPreprocessing(ClauseDB &clauseDB) {
 
   // CallMaxPre2(clauseDB);
   // count soft clauses after
@@ -1117,7 +1117,7 @@ bool Pacose::ExternalPreprocessing(ClauseDB &clauseDB) {
         // Border Case, empty hard clause cannot be satisfied, thus the
         // instance is UNSATISFIABLE!
         std::cout << "s UNSATISFIABLE" << std::endl;
-        return false;
+        return 20;
       }
       _hasHardClauses = true;
       std::vector<uint32_t> clause;
@@ -1164,19 +1164,23 @@ bool Pacose::ExternalPreprocessing(ClauseDB &clauseDB) {
       PrintResult();
       // TODO-Dieter: Check the way empty soft clauses are treated. They should be rewritten by objective update rule. 
       // std::cout << "v " << std::endl;
-      return false;
+      SaveModel();
+      return 10;
     }
     uint32_t rv = _satSolver->Solve();
     if (rv == 10) {
       std::cout << "s OPTIMUM FOUND" << std::endl;
       std::cout << "o " << emptyWeight << std::endl;
       PrintResult();
+      SaveModel();
+      return 10;
     } else if (rv == 20) {
       std::cout << "s UNSATISFIABLE" << std::endl;
+      return 20;
     } else {
       std::cout << "s UNKNOWN" << std::endl;
+      return 0;
     }
-    return false;
   }
 
   if (emptyWeight > 0) {
@@ -1197,15 +1201,15 @@ bool Pacose::ExternalPreprocessing(ClauseDB &clauseDB) {
   clauseDB.clauses.clear();
   clauseDB.weights.clear();
 
-  return true;
+  return 30;
 }
 
 
 uint32_t Pacose::SolveProcedure(ClauseDB &clauseDB) {
-
-  if (!ExternalPreprocessing(clauseDB)) {
-    return 0;
-  };
+  uint32_t preResult = ExternalPreprocessing(clauseDB);
+  if (preResult != 30) {
+    return preResult;
+  }
 
   _settings.formulaIsDivided = true;
   double timeStart;
